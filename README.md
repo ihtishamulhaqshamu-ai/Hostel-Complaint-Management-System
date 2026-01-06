@@ -1,7 +1,6 @@
 # Hostel Room & Complaint Management System
 
-This project is developed as a semester project for Programming Fundamentals.
-
+This project is developed as a semester project for Fundamental of ICT.
 ## Objective
 To manage hostel complaints and analyze complaint status efficiently.
 
