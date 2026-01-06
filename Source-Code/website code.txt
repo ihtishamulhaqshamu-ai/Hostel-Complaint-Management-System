@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Room & Complaint Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f6fa;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-info {
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            padding: 0.4rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page Content */
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Login Page */
+        .login-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .login-container h2 {
+            color: #ff6b6b;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h3 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ff6b6b;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            width: auto;
+            font-size: 0.9rem;
+        }
+
+        /* Status Page */
+        .status-info {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .status-table th, .status-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .status-table th {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #ffeaa7;
+            color: #d63031;
+        }
+
+        .status-progress {
+            background: #74b9ff;
+            color: #0984e3;
+        }
+
+        .status-resolved {
+            background: #55efc4;
+            color: #00b894;
+        }
+
+        /* Admin Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #2d3436;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            color: #ff6b6b;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Backend Roadmap Box */
+        .roadmap-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .roadmap-box h3 {
+            color: #856404;
+            margin-bottom: 1rem;
+        }
+
+        .roadmap-box ul {
+            margin-left: 2rem;
+            line-height: 2;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="mainNav" style="display: none;">
+        <div class="nav-container">
+            <ul id="navLinks">
+                <li><a href="#" onclick="showPage('home')">Home</a></li>
+                <li><a href="#" onclick="showPage('submit')">Submit Complaint</a></li>
+                <li><a href="#" onclick="showPage('status')">My Complaints</a></li>
+                <li id="adminLink" style="display: none;"><a href="#" onclick="showPage('admin')">Admin Panel</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="userDisplay"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <h1>Hostel Room & Complaint Management System</h1>
+        <p>Efficient Digital Solution for Hostel Complaint Management</p>
+    </header>
+
+    <div class="container">
+        <!-- Login Page -->
+        <div id="login" class="page active">
+            <div class="login-container">
+                <h2>Login to System</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <div style="margin-top: 1rem; text-align: center; color: #666; font-size: 0.9rem;">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Student: username: <code>student</code> | password: <code>student123</code></p>
+                    <p>Admin: username: <code>admin</code> | password: <code>admin123</code></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Page -->
+        <div id="home" class="page">
+            <h2 class="section-title">Welcome to Our System</h2>
+            <p class="intro-text">
+                Our digital complaint management system provides an efficient way to report and track hostel room issues.
+            </p>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3>📝 Easy Submission</h3>
+                    <p>Submit your complaints digitally with a simple form.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📊 Track Status</h3>
+                    <p>Monitor the progress of your complaints in real-time.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>⚡ Quick Response</h3>
+                    <p>Structured system ensures faster response times.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💾 Organized Records</h3>
+                    <p>All complaints stored in structured database.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Complaint Page -->
+        <div id="submit" class="page">
+            <h2 class="section-title">Submit Your Complaint</h2>
+            <p class="intro-text">Fill out the form below to report any issues with your hostel room.</p>
+
+            <div class="status-info">
+                <form id="complaintForm">
+                    <div class="form-group">
+                        <label for="studentName">Student Name *</label>
+                        <input type="text" id="studentName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="regNo">Registration Number *</label>
+                        <input type="text" id="regNo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roomNo">Room Number *</label>
+                        <input type="text" id="roomNo" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complaintType">Complaint Type *</label>
+                        <select id="complaintType" required>
+                            <option value="">Select Complaint Type</option>
+                            <option value="Electrical Fault">Electrical Fault</option>
+                            <option value="Water Leakage">Water Leakage</option>
+                            <option value="Damaged Furniture">Damaged Furniture</option>
+                            <option value="Heating/Cooling">Heating/Cooling Issue</option>
+                            <option value="Door/Window">Door/Window Problem</option>
+                            <option value="Cleanliness">Cleanliness Concern</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Complaint Description *</label>
+                        <textarea id="description" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactNo">Contact Number *</label>
+                        <input type="tel" id="contactNo" required>
+                    </div>
+
+                    <button type="submit">Submit Complaint</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Status Page (Student View) -->
+        <div id="status" class="page">
+            <h2 class="section-title">My Complaints</h2>
+            <div class="status-info">
+                <h3>Your Submitted Complaints</h3>
+                <div id="userComplaintsList"></div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="admin" class="page">
+            <h2 class="section-title">Admin Dashboard</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalComplaints">0</h3>
+                    <p>Total Complaints</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="pendingComplaints">0</h3>
+                    <p>Pending</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="progressComplaints">0</h3>
+                    <p>In Progress</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="resolvedComplaints">0</h3>
+                    <p>Resolved</p>
+                </div>
+            </div>
+
+            <div class="status-info">
+                <h3>All Complaints</h3>
+                <div id="adminComplaintsList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Hostel Room & Complaint Management System</p>
+    </footer>
+
+    <script>
+        // IMPORTANT NOTE: This system uses in-memory storage (JavaScript variables) instead of localStorage
+        // because localStorage is not supported in Claude.ai artifacts.
+        // When you deploy this to your own environment, you can uncomment the localStorage code below.
+
+        let currentUser = null;
+        let complaints = [];
+        let complaintIdCounter = 1;
+
+        // Initialize system
+        function initSystem() {
+            // Demo data
+            complaints = [
+                {
+                    id: 'C001',
+                    studentName: 'Ali Ahmed',
+                    regNo: 'B25F0001',
+                    roomNo: 'A-101',
+                    type: 'Electrical Fault',
+                    description: 'Fan not working',
+                    contact: '0300-1234567',
+                    status: 'Resolved',
+                    date: '2024-12-10',
+                    submittedBy: 'student'
+                }
+            ];
+            complaintIdCounter = 2;
+        }
+
+        // Login functionality
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // Simple authentication (in real app, verify against database)
+            if ((username === 'student' && password === 'student123') || 
+                (username === 'admin' && password === 'admin123')) {
+                currentUser = {
+                    username: username,
+                    role: username === 'admin' ? 'admin' : 'student'
+                };
+                
+                document.getElementById('mainNav').style.display = 'block';
+                document.getElementById('userDisplay').textContent = `Welcome, ${username}`;
+                
+                if (currentUser.role === 'admin') {
+                    document.getElementById('adminLink').style.display = 'block';
+                    showPage('admin');
+                } else {
+                    showPage('home');
+                }
+            } else {
+                alert('Invalid credentials!');
+            }
+        });
+
+        // Logout
+        function logout() {
+            currentUser = null;
+            document.getElementById('mainNav').style.display = 'none';
+            document.getElementById('adminLink').style.display = 'none';
+            showPage('login');
+            document.getElementById('loginForm').reset();
+        }
+
+        // Page navigation
+        function showPage(pageId) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            if (pageId === 'status') {
+                displayUserComplaints();
+            } else if (pageId === 'admin') {
+                displayAdminDashboard();
+            }
+        }
+
+        // Submit complaint
+        document.getElementById('complaintForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const complaint = {
+                id: 'C' + String(complaintIdCounter++).padStart(3, '0'),
+                studentName: document.getElementById('studentName').value,
+                regNo: document.getElementById('regNo').value,
+                roomNo: document.getElementById('roomNo').value,
+                type: document.getElementById('complaintType').value,
+                description: document.getElementById('description').value,
+                contact: document.getElementById('contactNo').value,
+                status: 'Pending',
+                date: new Date().toISOString().split('T')[0],
+                submittedBy: currentUser.username
+            };
+
+            complaints.push(complaint);
+            
+            alert('Complaint submitted successfully! Complaint ID: ' + complaint.id);
+            this.reset();
+            showPage('status');
+        });
+
+        // Display user complaints
+        function displayUserComplaints() {
+            const userComplaints = complaints.filter(c => c.submittedBy === currentUser.username);
+            const container = document.getElementById('userComplaintsList');
+            
+            if (userComplaints.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No complaints submitted yet.</p>';
+                return;
+            }
+
+            let html = '<table class="status-table"><thead><tr><th>ID</th><th>Room</th><th>Type</th><th>Date</th><th>Status</th></tr></thead><tbody>';
+            
+            userComplaints.forEach(complaint => {
+                const statusClass = complaint.status === 'Resolved' ? 'status-resolved' : 
+                                   complaint.status === 'In Progress' ? 'status-progress' : 'status-pending';
+                html += `
+                    <tr>
+                        <td>${complaint.id}</td>
+                        <td>${complaint.roomNo}</td>
+                        <td>${complaint.type}</td>
+                        <td>${complaint.date}</td>
+                        <td><span class="status-badge ${statusClass}">${complaint.status}</span></td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Display admin dashboard
+        function displayAdminDashboard() {
+            // Update statistics
+            document.getElementById('totalComplaints').textContent = complaints.length;
+            document.getElementById('pendingComplaints').textContent = complaints.filter(c => c.status === 'Pending').length;
+            document.getElementById('progressComplaints').textContent = complaints.filter(c => c.status === 'In Progress').length;
+            document.getElementById('resolvedComplaints').textContent = complaints.filter(c => c.status === 'Resolved').length;
+
+            // Display all complaints
+            const container = document.getElementById('adminComplaintsList');
+            
+            if (complaints.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #666; padding: 2rem;">No complaints in system.</p>';
+                return;
+            }
+
+            let html = '<table class="status-table"><thead><tr><th>ID</th><th>Student</th><th>Room</th><th>Type</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead><tbody>';
+            
+            complaints.forEach(complaint => {
+                const statusClass = complaint.status === 'Resolved' ? 'status-resolved' : 
+                                   complaint.status === 'In Progress' ? 'status-progress' : 'status-pending';
+                html += `
+                    <tr>
+                        <td>${complaint.id}</td>
+                        <td>${complaint.studentName}</td>
+                        <td>${complaint.roomNo}</td>
+                        <td>${complaint.type}</td>
+                        <td>${complaint.date}</td>
+                        <td><span class="status-badge ${statusClass}">${complaint.status}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-success" onclick="updateStatus('${complaint.id}', 'In Progress')">Progress</button>
+                                <button class="btn-small btn-success" onclick="updateStatus('${complaint.id}', 'Resolved')">Resolve</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            container.innerHTML = html;
+        }
+
+        // Update complaint status
+        function updateStatus(complaintId, newStatus) {
+            const complaint = complaints.find(c => c.id === complaintId);
+            if (complaint) {
+                complaint.status = newStatus;
+                displayAdminDashboard();
+                alert(`Complaint ${complaintId} status updated to ${newStatus}`);
+            }
+        }
+
+        // Initialize on load
+        initSystem();
+    </script>
+</body>
+</html>
